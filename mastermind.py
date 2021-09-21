@@ -443,7 +443,8 @@ def DessinerJeu():
             if emplacement[2] == "vide" and ligne != grille[index_ligne_actuelle]:
                 image = fichiers["jeu_pion_emplacement_opaque"]
             else:
-                image = fichiers["jeu_pion_" + emplacement[2] + "_40x40"]
+                if emplacement[2] != "vide":
+                    image = fichiers["jeu_pion_" + emplacement[2] + "_40x40"]
             canevas.create_image(emplacement[0], emplacement[1], image=image, anchor='nw')
 
 def JeuReglesBoutonClick(event):
