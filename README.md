@@ -1,6 +1,6 @@
 # Mastermind
 
-This is a game I made in Python in _Informatique et Sciences du Numérique_ (a french computer oriented discipline) for the Baccalauréat Scientifique (the french national academic qualification) in 2018.
+This is a game I made in Python 3 using Tkinter in _Informatique et Sciences du Numérique_ (a french computer oriented discipline) for the Baccalauréat Scientifique (the french national academic qualification) in 2018.
 
 ## Screenshots
 
@@ -16,6 +16,22 @@ This is a game I made in Python in _Informatique et Sciences du Numérique_ (a f
 ### Prerequisites
 
 Install [Python 3 or earlier](https://www.python.org/downloads/) and pip.
+
+Then, install Tkinter.
+
+On Windows, it should be pre-installed with Python 3.
+
+On Debian-based Linux distributions, install it with :
+
+```
+sudo apt-get install -y python3-tk
+```
+
+On RedHat-based Linux distributions, install it with :
+
+```
+sudo dnf install -y python3-tkinter
+```
 
 Then install pyglet with :
 
