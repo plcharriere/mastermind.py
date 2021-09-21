@@ -6,28 +6,29 @@ ______     _              ___  ___          _                      _           _
 | |\ \  __/ |_| | | (_) | | |  | | (_| \__ \ ||  __/ |  | | | | | | | | | | (_| |
 \_| \_\___|\__|_|  \___/  \_|  |_/\__,_|___/\__\___|_|  |_| |_| |_|_|_| |_|\__,_|
 
-Projet réalisé en ISN par Paul-Louis Charrière dans le cadre du projet à rendre au baccalauréat.
+Projet réalisé en ISN par Paul-Louis Charrière dans le cadre du projet à rendre au Baccalauréat scientifique 2018.
 
 '''
 
 # -------------------------------------------------------------- Importation des librairies  ----------------------------------------------------------- #
 
-# La librairie pyglet est utilisée pour jouer les effets sonores sur les boutons et quand on gagne ou perd une partie
-# Ces effets sonores sont seulement pour l'ambiance sonore et n'impactent pas le gameplay
+# La librairie pyglet est utilisée pour jouer la musique de fond et les effets sonores sur les boutons et quand on gagne ou perd une partie
+# La musique et les effets sonores sont seulement pour l'ambiance sonore et n'impactent pas le gameplay
 
 # Si pyglet est installé, changer la valeur de cette variable en True
 ACTIVER_EFFETS_SONORES = True
 
 from tkinter import *
 from tkinter import messagebox
-#import winsound
 import random
 import os
 import os.path
 import sys
+import threading
 
 if ACTIVER_EFFETS_SONORES:
     import pyglet
+    from pyglet.media import Player, load
 
 # ----------------------------------------------------------- Déclaration des fonctions du programme ----------------------------------------------------------- #
 
@@ -35,27 +36,29 @@ if ACTIVER_EFFETS_SONORES:
 #                      Fonctions gérant les sons du programme                             #
 ###########################################################################################
 
+global musique_en_cours
+musique_en_cours = False
+
 def JouerMusiqueDeFond():
-    # On définie dans cette variable globale :
-    # True : la musique est en train d'être jouée
-    # False : la musique n'est pas en train d'être jouée
-    global musique_en_cours
-    musique_en_cours = True
-
-    # On joue une musique au hasard                                                                 Ce sont des drapeaux permettant de donner des paramètres à la fonction
-    #winsound.PlaySound('ressources/sons/musiques/musique_1.wav', winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_LOOP)
-    # winsound.SND_FILENAME : on joue une musique à partir d'un fichier
-    # winsound.SND_ASYNC : la musique est jouée en paralèlle au programme
-    # winsound.SND_LOOP : la musique est jouée en boucle
-
-def StopperMusiqueDeFond():
-
-    # Permet d'arrêter la musique
-    winsound.PlaySound(None, winsound.SND_PURGE),
+    global player
+    player = Player()
+    player.loop = True
+    source = load('ressources/sons/musiques/musique_1.mp3')
+    player.queue(source)
+    player.play()
 
     # On change la variable globale pour indiquer que la musique n'est plus en train d'être jouée
     global musique_en_cours
+    musique_en_cours = True
+
+def StopperMusiqueDeFond():
+    global player
+    player.pause()
+    
+    # On change la variable globale pour indiquer que la musique n'est plus en train d'être jouée
+    global musique_en_cours
     musique_en_cours = False
+
 
 # On appelle cette fonction quand la souris survole un bouton
 # Elle permet de jouer un son
@@ -76,15 +79,16 @@ def BoutonClick(event = False):
 # Elle est appelée quand on clique sur un bouton permettant d'arrêter ou de lancer la musique
 def BoutonMusiqueClick(event):
     # Si la musique est en train d'être jouée, on l'arrête sinon on la lance
-    # On change l'image du bouton permettant d'alterner la musique indiquant l'état de la musique
-
     if musique_en_cours == True:
         StopperMusiqueDeFond()
-        canevas.itemconfigure(bouton_musique, image=fichiers["menu_musique_off_btn"], activeimage=fichiers["menu_musique_off_btn_hover"])
     else:
         JouerMusiqueDeFond()
-        canevas.itemconfigure(bouton_musique, image=fichiers["menu_musique_on_btn"], activeimage=fichiers["menu_musique_on_btn_hover"])
 
+    # On change l'image du bouton permettant d'alterner la musique indiquant l'état de la musique
+    if musique_en_cours == True:
+        canevas.itemconfigure(bouton_musique, image=fichiers["menu_musique_on_btn"], activeimage=fichiers["menu_musique_on_btn_hover"])
+    else:
+        canevas.itemconfigure(bouton_musique, image=fichiers["menu_musique_off_btn"], activeimage=fichiers["menu_musique_off_btn_hover"])
 
 
 ###########################################################################################
@@ -198,10 +202,6 @@ def ChargerFichiers():
         exit()
 
 
-
-
-
-
 ###########################################################################################
 #                    Fonctions dessinant les écrans du programme                          #
 ###########################################################################################
@@ -239,27 +239,30 @@ def DessinerMenu(event = False):
     bouton_credits = canevas.create_image(400, 420, image=fichiers["menu_credits_btn"], activeimage=fichiers["menu_credits_btn_hover"], anchor='center')
     bouton_quitter = canevas.create_image(400, 500, image=fichiers["menu_quitter_btn"], activeimage=fichiers["menu_quitter_btn_hover"], anchor='center')
 
-    # Si la musique est en train d'être jouée, on affiche le bouton avec une image du bouton indiquant que la musique est "ON" sinon "OFF"
-    # On définit le bouton comme global pour pouvoir changer son image à l'aide de la fonction BoutonMusiqueClick
-    global bouton_musique
-    if musique_en_cours == True:
-        bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_on_btn"], activeimage=fichiers["menu_musique_on_btn_hover"], anchor='center')
-    else:
-        bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_off_btn"], activeimage=fichiers["menu_musique_off_btn_hover"], anchor='center')
+    if ACTIVER_EFFETS_SONORES:
+        # Si la musique est en train d'être jouée, on affiche le bouton avec une image du bouton indiquant que la musique est "ON" sinon "OFF"
+        # On définit le bouton comme global pour pouvoir changer son image à l'aide de la fonction BoutonMusiqueClick
+        global bouton_musique
+        if musique_en_cours == True:
+            bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_on_btn"], activeimage=fichiers["menu_musique_on_btn_hover"], anchor='center')
+        else:
+            bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_off_btn"], activeimage=fichiers["menu_musique_off_btn_hover"], anchor='center')
 
     # Ici, on associe le clique gauche sur les images à des fonction
     # <ButtonPress-1> signifie l'évènement du clic gauche
     canevas.tag_bind(bouton_jouer, '<ButtonPress-1>', MenuJouerClick)
     canevas.tag_bind(bouton_credits, '<ButtonPress-1>', MenuCreditsClick)
     canevas.tag_bind(bouton_quitter, '<ButtonPress-1>', MenuQuitterClick)
-    canevas.tag_bind(bouton_musique, '<ButtonPress-1>', BoutonMusiqueClick)
+    if ACTIVER_EFFETS_SONORES:
+        canevas.tag_bind(bouton_musique, '<ButtonPress-1>', BoutonMusiqueClick)
 
     # <Enter> signifie que la souris survole l'image
     # On appelle donc la fonction BoutonSurvole pour que le son d'une image survolée soit joué
     canevas.tag_bind(bouton_jouer, '<Enter>', BoutonSurvole)
     canevas.tag_bind(bouton_quitter, '<Enter>', BoutonSurvole)
     canevas.tag_bind(bouton_credits, '<Enter>', BoutonSurvole)
-    canevas.tag_bind(bouton_musique, '<Enter>', BoutonSurvole)
+    if ACTIVER_EFFETS_SONORES:
+        canevas.tag_bind(bouton_musique, '<Enter>', BoutonSurvole)
 
     canevas.update()
     return
@@ -411,19 +414,22 @@ def DessinerJeu():
     bouton_menu = canevas.create_image(690, 545, image=fichiers["jeu_menu_btn"], activeimage=fichiers["jeu_menu_btn_hover"], anchor='center')
     bouton_regles = canevas.create_image(690, 470, image=fichiers["jeu_regles_btn"], activeimage=fichiers["jeu_regles_btn_hover"], anchor='center')
 
-    global bouton_musique
-    if musique_en_cours == True:
-        bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_on_btn"], activeimage=fichiers["menu_musique_on_btn_hover"], anchor='center')
-    else:
-        bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_off_btn"], activeimage=fichiers["menu_musique_off_btn_hover"], anchor='center')
+    if ACTIVER_EFFETS_SONORES:
+        global bouton_musique
+        if musique_en_cours == True:
+            bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_on_btn"], activeimage=fichiers["menu_musique_on_btn_hover"], anchor='center')
+        else:
+            bouton_musique = canevas.create_image(700, 50, image=fichiers["menu_musique_off_btn"], activeimage=fichiers["menu_musique_off_btn_hover"], anchor='center')
 
     canevas.tag_bind(bouton_menu, '<ButtonPress-1>', JeuMenuBoutonClick)
     canevas.tag_bind(bouton_regles, '<ButtonPress-1>', JeuReglesBoutonClick)
-    canevas.tag_bind(bouton_musique, '<ButtonPress-1>', BoutonMusiqueClick)
+    if ACTIVER_EFFETS_SONORES:
+        canevas.tag_bind(bouton_musique, '<ButtonPress-1>', BoutonMusiqueClick)
 
     canevas.tag_bind(bouton_menu, '<Enter>', BoutonSurvole)
     canevas.tag_bind(bouton_regles, '<Enter>', BoutonSurvole)
-    canevas.tag_bind(bouton_musique, '<Enter>', BoutonSurvole)
+    if ACTIVER_EFFETS_SONORES:
+        canevas.tag_bind(bouton_musique, '<Enter>', BoutonSurvole)
 
     # ---------- Grille ----------- #
 
@@ -624,7 +630,8 @@ canevas.pack()
 ChargerFichiers()
 
 # On appelle la fonction qui lance la musique
-JouerMusiqueDeFond()
+if ACTIVER_EFFETS_SONORES:
+    JouerMusiqueDeFond()
 
 # On appelle la fonction qui dessine l'introduction
 DessinerIntroduction()
