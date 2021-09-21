@@ -5,8 +5,10 @@ This is a game I made in Python in _Informatique et Sciences du Numérique_ (a f
 ## Screenshots
 
 <p align="center">
-  <img src="https://i.imgur.com/TjwjTCK.png" />
-  <img src="https://i.imgur.com/AJDPQtA.png" />
+  <img src="https://i.imgur.com/TjwjTCK.png" width="415" />
+  <img src="https://i.imgur.com/3HiEb30.png" width="415" />
+  <img src="https://i.imgur.com/AJDPQtA.png" width="415" />
+  <img src="https://i.imgur.com/XaNuA64.png" width="415" />
 </p>
 
 ## How to run
