@@ -524,6 +524,35 @@ def LacherPion(event):
         for emplacement in grille[index_ligne_actuelle]:
             ligne_actuelle.append(emplacement[2])
 
+        languettes = []
+
+        copie_ligne_aleatoire = list(ligne_aleatoire)
+        ligne_actuelle = []
+
+        for emplacement in grille[index_ligne_actuelle]:
+            ligne_actuelle.append(emplacement[2])
+
+        index = 0;
+        for couleur in ligne_actuelle:
+            if ligne_aleatoire[index] == couleur:
+                languettes.append("rouge")
+                copie_ligne_aleatoire.remove(couleur)
+            index += 1
+
+        for couleur in ligne_actuelle:
+            for couleur2 in copie_ligne_aleatoire:
+                if couleur == couleur2:
+                    languettes.append("blanche")
+                    copie_ligne_aleatoire.remove(couleur)
+
+        languettes = sorted(languettes, reverse=True)
+
+        index = 0
+        for languette in languettes:
+            grille_languettes[index_ligne_actuelle][index][2] = languette
+            canevas.create_image(grille_languettes[index_ligne_actuelle][index][0], grille_languettes[index_ligne_actuelle][index][1], image=fichiers["jeu_languette_" + languette], anchor='nw')
+            index += 1
+
         if ligne_actuelle == ligne_aleatoire:
             canevas.create_image(0, 0, image=fichiers["jeu_bandeau_gagne"], anchor='nw')
             bouton_rejouer = canevas.create_image(205, 340, image=fichiers["jeu_rejouer_btn"], activeimage=fichiers["jeu_rejouer_btn_hover"], anchor='nw')
@@ -562,36 +591,6 @@ def LacherPion(event):
                     son = pyglet.media.load('ressources/sons/sfx/perdu.wav')
                     son.play()
             else:
-                languettes = []
-
-                copie_ligne_aleatoire = list(ligne_aleatoire)
-                ligne_actuelle = []
-
-                for emplacement in grille[index_ligne_actuelle]:
-                    ligne_actuelle.append(emplacement[2])
-
-                index = 0;
-                for couleur in ligne_actuelle:
-                    if ligne_aleatoire[index] == couleur:
-                        languettes.append("rouge")
-                        copie_ligne_aleatoire.remove(couleur)
-                    index += 1
-
-                for couleur in ligne_actuelle:
-                    for couleur2 in copie_ligne_aleatoire:
-                        if couleur == couleur2:
-                            languettes.append("blanche")
-                            copie_ligne_aleatoire.remove(couleur)
-
-
-                languettes = sorted(languettes, reverse=True)
-
-                index = 0
-                for languette in languettes:
-                    grille_languettes[index_ligne_actuelle][index][2] = languette
-                    canevas.create_image(grille_languettes[index_ligne_actuelle][index][0], grille_languettes[index_ligne_actuelle][index][1], image=fichiers["jeu_languette_" + languette], anchor='nw')
-                    index += 1
-
                 index_ligne_actuelle = index_ligne_actuelle - 1
                 for emplacement in grille[index_ligne_actuelle]:
                     canevas.create_image(emplacement[0], emplacement[1], image=fichiers["jeu_pion_emplacement"], anchor='nw')
