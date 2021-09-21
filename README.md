@@ -1,6 +1,8 @@
-# Mastermind
+# Retro Mastermind
 
-This is a game I made in Python 3 using Tkinter in _Informatique et Sciences du Numérique_ (a french computer oriented discipline) for the Baccalauréat Scientifique (the french national academic qualification) in 2018.
+Retro Mastermind is a retrowave themed mastermind game made with Python 3 using Tkinter.
+
+I made this game for the _Baccalauréat scientifique_ (the french national academic qualification) for the _Informatique et Sciences du Numérique_ (a french computer oriented discipline) speciality in 2018.
 
 ## Screenshots
 
@@ -51,7 +53,8 @@ python mastermind.py
 
 ## Credits
 
+- Logo, buttons and sprites : I made all the sprites with Photoshop CC 2017, psd source files are available [here](https://github.com/plcharriere/mastermind.py/tree/main/ressources/images/sources%20psd).
 - Backgrounds : [AxiomDesign](https://www.deviantart.com/axiomdesign)
 - Fonts : [Streamster](https://www.dafont.com/streamster.font), [Death Star](https://www.dafont.com/death-star.font) and [Krinkes](https://www.dafont.com/krinkes.font)
+- Music : [M.O.O.N. - Dust](https://soundcloud.com/moon_music/dust)
 - Sound effects : GTA: San Andreas, [zapsplat.com](https://www.zapsplat.com)
-- Sprites : I made all the sprites with Photoshop CC 2017, psd source files are available [here](https://github.com/plcharriere/mastermind.py/tree/main/ressources/images/sources%20psd).
