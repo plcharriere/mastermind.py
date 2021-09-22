@@ -24,7 +24,6 @@ import random
 import os
 import os.path
 import sys
-import threading
 
 if ACTIVER_EFFETS_SONORES:
     import pyglet
