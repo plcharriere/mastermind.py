@@ -77,6 +77,7 @@ def BoutonClick(event = False):
 # Cette fonction permet d'alterner la musique quand on l'appelle
 # Elle est appelée quand on clique sur un bouton permettant d'arrêter ou de lancer la musique
 def BoutonMusiqueClick(event):
+    BoutonClick()
     # Si la musique est en train d'être jouée, on l'arrête sinon on la lance
     if musique_en_cours == True:
         StopperMusiqueDeFond()
@@ -392,6 +393,11 @@ def DessinerJeu():
     pion_vert_btn = canevas.create_image(520, 120 * 3, image=fichiers["jeu_pion_vert_40x40"], activeimage=fichiers["jeu_pion_vert_50x50_hover"], anchor='center')
     pion_jaune_btn = canevas.create_image(520, 120 * 4, image=fichiers["jeu_pion_jaune_40x40"], activeimage=fichiers["jeu_pion_jaune_50x50_hover"], anchor='center')
 
+    canevas.tag_bind(pion_rouge_btn, '<Enter>', BoutonSurvole)
+    canevas.tag_bind(pion_bleu_btn, '<Enter>', BoutonSurvole)
+    canevas.tag_bind(pion_vert_btn, '<Enter>', BoutonSurvole)
+    canevas.tag_bind(pion_jaune_btn, '<Enter>', BoutonSurvole)
+
     canevas.tag_bind(pion_rouge_btn, '<ButtonPress-1>', selectionnerRouge)
     canevas.tag_bind(pion_bleu_btn, '<ButtonPress-1>', selectionnerBleu)
     canevas.tag_bind(pion_vert_btn, '<ButtonPress-1>', selectionnerVert)
@@ -519,6 +525,10 @@ def LacherPion(event):
         if event.x > emplacement[0] and event.x < emplacement[0] + 40 and event.y > emplacement[1] and event.y < emplacement[1] + 40 :
             canevas.create_image(emplacement[0], emplacement[1], image=fichiers["jeu_pion_" + pion_actuel_couleur + "_40x40"], anchor='nw')
             emplacement[2] = pion_actuel_couleur
+
+            if ACTIVER_EFFETS_SONORES:
+                son = pyglet.media.load("ressources/sons/sfx/place_pion_" + str(random.randint(1, 5)) + ".mp3")
+                son.play()
 
     ligne_complete = True
     for emplacement in grille[index_ligne_actuelle]:
